@@ -2,7 +2,6 @@ package com.jiduqingqian.recycleviewdemo.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,10 +101,11 @@ public class SlidingFinishRelativeLayout extends RelativeLayout implements View.
         int scrollY;
         if (parentView.getScrollY() > 0) {//向上
             scrollY = getHeight() - parentView.getScrollY();
+            mScroller.startScroll(0, parentView.getScrollY(), 0, scrollY - 2, Math.abs(scrollY) / 2);
         } else {
             scrollY = -getHeight() - parentView.getScrollY();
+            mScroller.startScroll(0, parentView.getScrollY(), 0, scrollY + 2, Math.abs(scrollY) / 2);
         }
-        mScroller.startScroll(0, parentView.getScrollY(), 0, scrollY + 1, Math.abs(scrollY));
         postInvalidate();
     }
 
@@ -116,15 +116,12 @@ public class SlidingFinishRelativeLayout extends RelativeLayout implements View.
     @Override
     public void computeScroll() {
         // 调用startScroll的时候scroller.computeScrollOffset()返回true，
-        Log.d("qh", mScroller.isFinished() + "--" + isFinish);
         if (mScroller.computeScrollOffset()) {
             parentView.scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
             postInvalidate();
-            if (mScroller.isFinished()) {
-                if (onSildingFinishListener != null && isFinish) {
-                    onSildingFinishListener.onSildingFinish();
-                }
-            }
+        } else if (mScroller.isFinished() && onSildingFinishListener != null && isFinish) {
+            onSildingFinishListener.onSildingFinish();
+            isFinish = false;
         }
     }
 }
