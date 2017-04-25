@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
@@ -52,6 +53,7 @@ public class SlidingFinishRelativeLayout extends RelativeLayout implements View.
     private void init() {
         parentView = (ViewGroup) getParent();
         mScroller = new Scroller(getContext());
+        mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
 
     public void setTouchView(View touchView) {
